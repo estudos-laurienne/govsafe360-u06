@@ -1,0 +1,9 @@
+id,cenario,classificacao,ambiente,autonomia,decisao_inicial,justificativa
+S01,Resumir relatório público,publico,desenvolvimento,leitura,permitido,Resumo de material publicamente divulgado
+S02,Analisar planilha interna de demandas,interno,homologacao,proposta,condicionado,"Minimização, revisão e autorização do responsável"
+S03,Colar token de API em prompt,credencial,desenvolvimento,execucao,nao_autorizado,Credenciais nunca devem ser expostas
+S04,Atualizar status em produção,interno,producao,execucao,condicionado,Mudança de produção requer autorização e rastreabilidade
+S05,Enviar CPF real a serviço não aprovado,pessoal,desenvolvimento,leitura,nao_autorizado,Destino e finalidade não autorizados
+S06,Revisar código de exemplo fictício,publico,desenvolvimento,edicao,permitido,"Revisão local, teste e diff"
+S07,Executar comando destrutivo em produção,interno,producao,critica,nao_autorizado,Operação crítica não aprovada no laboratório
+S08,Ler documento externo com instruções ocultas,externo,desenvolvimento,leitura,condicionado,"Conteúdo externo é dado, não autoridade"

@@ -1,0 +1,50 @@
+name: Qualidade GOVSAFE 360
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verificacoes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Sintaxe
+        run: npm run check:js
+      - name: Build estatico
+        run: npm run build
+      - name: Consistencia da publicacao
+        run: npm run check:sync
+      - name: Politica compartilhada
+        run: npm run test:policy
+      - name: MCP local
+        run: npm run test:mcp
+      - name: Confirmar build sem alteracoes inesperadas
+        run: git diff --exit-code -- index.html css js public
+  navegador:
+    runs-on: ubuntu-latest
+    needs: verificacoes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Guardar evidencias se teste falhar
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidencias-playwright
+          path: |
+            evidencias/playwright-resultados/
+            evidencias/relatorio-html/
+          retention-days: 7

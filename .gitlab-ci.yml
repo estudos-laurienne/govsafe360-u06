@@ -1,0 +1,12 @@
+# DEMONSTRAÇÃO OPCIONAL: GitLab CI, não exigido na trilha principal.
+stages: [quality]
+qualidade:
+  image: node:22
+  stage: quality
+  script:
+    - npm install --no-audit --no-fund
+    - npm run check:js
+    - npm run build
+    - npm run check:sync
+    - npm run test:policy
+    - npm run test:mcp
