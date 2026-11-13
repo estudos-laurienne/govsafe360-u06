@@ -80,3 +80,19 @@ test('08 · Política navegador: produção+execução é não autorizado',async
  const row=page.locator('#rows tr').filter({hasText:'Execução produtiva simulada'});
  await expect(row.locator('.chip')).toHaveText('Não autorizado');
 });
+test('09 · Limpar filtros restaura a lista sem apagar dados',async({page})=>{
+ const eventsBefore=await page.locator('#events li').count();
+ await page.locator('#query').fill('token');
+ await page.locator('#statusFilter').selectOption('nao_autorizado');
+ await expect(page.locator('#rows tr')).toHaveCount(1);
+ await page.locator('#clearFilters').click();
+ await expect(page.locator('#query')).toHaveValue('');
+ await expect(page.locator('#statusFilter')).toHaveValue('');
+ await expect(page.locator('#query')).toBeFocused();
+ await expect(page.locator('#rows tr')).toHaveCount(8);
+ await expect(page.locator('#shownCount')).toContainText('8 de 8');
+ await expect(page.locator('#total')).toHaveText('8');
+ await expect(page.locator('#events li')).toHaveCount(eventsBefore);
+ await page.reload();
+ await expect(page.locator('#total')).toHaveText('8');
+});
